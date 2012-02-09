@@ -2,7 +2,7 @@ Summary:	Barcode generator
 Summary(pl.UTF-8):	Generator kodów kreskowych
 Name:		zint
 Version:	2.4.3
-Release:	3
+Release:	4
 License:	GPL v3+
 Group:		Applications
 Source0:	http://downloads.sourceforge.net/zint/%{name}-%{version}.tar.gz
