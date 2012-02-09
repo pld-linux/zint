@@ -12,6 +12,7 @@ BuildRequires:	QtUiTools-devel
 BuildRequires:	cmake >= 2.6.0
 BuildRequires:	libpng-devel
 BuildRequires:	qt4-build
+BuildRequires:	qt4-qmake
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
