@@ -1,18 +1,22 @@
 Summary:	Barcode generator
 Summary(pl.UTF-8):	Generator kodów kreskowych
 Name:		zint
-Version:	2.4.3
-Release:	6
+Version:	2.6.0
+Release:	1
 License:	GPL v3+
-Group:		Applications
-Source0:	http://downloads.sourceforge.net/zint/%{name}-%{version}.tar.gz
-# Source0-md5:	2b47caff88cb746f212d6a0497185358
-BuildRequires:	QtCore-devel
-BuildRequires:	QtUiTools-devel
+Group:		Applications/Graphics
+Source0:	http://downloads.sourceforge.net/zint/%{name}-%{version}.src.tar.gz
+# Source0-md5:	f5c694742902155564a91b5925ecf0d9
+BuildRequires:	Qt5Core-devel >= 5
+BuildRequires:	Qt5Gui-devel >= 5
+BuildRequires:	Qt5UiTools-devel >= 5
+BuildRequires:	Qt5Widgets-devel >= 5
+BuildRequires:	Qt5Xml-devel >= 5
 BuildRequires:	cmake >= 2.6.0
 BuildRequires:	libpng-devel
-BuildRequires:	qt4-build
-BuildRequires:	qt4-qmake
+BuildRequires:	libstdc++-devel
+BuildRequires:	qt5-build >= 5
+BuildRequires:	qt5-qmake >= 5
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -31,6 +35,22 @@ library. Features of the library:
   colors.
 - Verification stage for SBN, ISBN and ISBN-13 data.
 
+%description -l pl.UTF-8
+Zint to biblioteka C do kodowania danych w kilku wariantach kodów
+koreskowych. Dołączone narzędzie linii poleceń udostępnia prosty
+interfejs do biblioteki. Możliwości biblioteki:
+- ponad 50 zestawów symboli, w tym wszystkie standardy ISO/IEC, typu
+  kody QR
+- tłumaczenie unikodowe symboli obsługujących zestawy znaków Latin-1 i
+  Kanji
+- pełna obsługa GS1, w tym weryfikacja danych i automatyczne
+  wstawianie znaków FNC1
+- obsługa kodowania danych binarnych wraz ze znakami NULL (ASCII 0)
+- możliwość kodowania HIBC (Health Industry Barcode)
+- wyjście w formatach PNG, EPS, SVG z rozmiarami i kolorami
+  wybieranymi przez użytkownika
+- etap weryfikacji dla danych SBN, ISBN i ISBN-13.
+
 %package devel
 Summary:	Header files for zint library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki zint
@@ -46,7 +66,7 @@ Pliki nagłówkowe biblioteki zint.
 %package qt
 Summary:	Zint Barcode Studio
 Summary(pl.UTF-8):	Zint Barcode Studio
-Group:		X11/Applications
+Group:		X11/Applications/Graphics
 Requires:	%{name} = %{version}-%{release}
 
 %description qt
@@ -64,6 +84,8 @@ Summary:	Header files for QZint library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki QZint
 Group:		X11/Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-qt = %{version}-%{release}
+Requires:	Qt5Gui-devel >= 5
 
 %description qt-devel
 Header files for QZint library.
@@ -77,7 +99,9 @@ Pliki nagłówkowe biblioteki QZint.
 find -type f -exec chmod 644 {} \;
 
 %build
-%cmake
+%cmake \
+	-DDATA_INSTALL_DIR=%{_datadir}
+
 %{__make}
 
 %install
@@ -87,6 +111,8 @@ install -d $RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir}}
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
+%{__mv} $RPM_BUILD_ROOT%{_datadir}/cmake/{modules,Modules}
+
 install zint.png $RPM_BUILD_ROOT%{_pixmapsdir}
 install zint-qt.desktop $RPM_BUILD_ROOT%{_desktopdir}
 
@@ -95,15 +121,16 @@ rm -rf $RPM_BUILD_ROOT
 
 %post	-p /sbin/ldconfig
 %postun	-p /sbin/ldconfig
-%post qt -p /sbin/ldconfig
+
+%post	qt -p /sbin/ldconfig
 %postun	qt -p /sbin/ldconfig
 
 %files
 %defattr(644,root,root,755)
-%doc readme
+%doc README TODO
 %attr(755,root,root) %{_bindir}/zint
 %attr(755,root,root) %{_libdir}/libzint.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libzint.so.2.4
+%attr(755,root,root) %ghost %{_libdir}/libzint.so.2.6
 
 %files devel
 %defattr(644,root,root,755)
@@ -115,7 +142,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/zint-qt
 %attr(755,root,root) %{_libdir}/libQZint.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libQZint.so.2.4
+%attr(755,root,root) %ghost %{_libdir}/libQZint.so.2.6
 %{_pixmapsdir}/zint.png
 %{_desktopdir}/zint-qt.desktop
 
