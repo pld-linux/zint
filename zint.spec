@@ -1,12 +1,12 @@
 Summary:	Barcode generator
 Summary(pl.UTF-8):	Generator kodów kreskowych
 Name:		zint
-Version:	2.6.0
+Version:	2.6.7
 Release:	1
 License:	GPL v3+
 Group:		Applications/Graphics
-Source0:	http://downloads.sourceforge.net/zint/%{name}-%{version}.src.tar.gz
-# Source0-md5:	f5c694742902155564a91b5925ecf0d9
+Source0:	http://downloads.sourceforge.net/zint/%{name}-%{version}.tar.gz
+# Source0-md5:	46c7c22dd1268c66be9293ddbe11506c
 BuildRequires:	Qt5Core-devel >= 5
 BuildRequires:	Qt5Gui-devel >= 5
 BuildRequires:	Qt5UiTools-devel >= 5
