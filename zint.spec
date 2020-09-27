@@ -1,12 +1,12 @@
 Summary:	Barcode generator
 Summary(pl.UTF-8):	Generator kodów kreskowych
 Name:		zint
-Version:	2.6.7
-Release:	2
+Version:	2.9.1
+Release:	1
 License:	GPL v3+
 Group:		Applications/Graphics
-Source0:	http://downloads.sourceforge.net/zint/%{name}-%{version}.tar.gz
-# Source0-md5:	46c7c22dd1268c66be9293ddbe11506c
+Source0:	http://downloads.sourceforge.net/zint/%{name}-%{version}-src.tar.gz
+# Source0-md5:	00511707a3b80023b97a6a79c9b145f0
 BuildRequires:	Qt5Core-devel >= 5
 BuildRequires:	Qt5Gui-devel >= 5
 BuildRequires:	Qt5UiTools-devel >= 5
@@ -94,12 +94,14 @@ Header files for QZint library.
 Pliki nagłówkowe biblioteki QZint.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}-src
 
 find -type f -exec chmod 644 {} \;
 
 %build
-%cmake \
+install -d build
+cd build
+%cmake .. \
 	-DDATA_INSTALL_DIR=%{_datadir}
 
 %{__make}
@@ -108,7 +110,7 @@ find -type f -exec chmod 644 {} \;
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir}}
 
-%{__make} install \
+%{__make} -C build install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 %{__mv} $RPM_BUILD_ROOT%{_datadir}/cmake/{modules,Modules}
@@ -130,7 +132,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc README TODO
 %attr(755,root,root) %{_bindir}/zint
 %attr(755,root,root) %{_libdir}/libzint.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libzint.so.2.6
+%attr(755,root,root) %ghost %{_libdir}/libzint.so.2.9
 
 %files devel
 %defattr(644,root,root,755)
@@ -142,7 +144,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/zint-qt
 %attr(755,root,root) %{_libdir}/libQZint.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libQZint.so.2.6
+%attr(755,root,root) %ghost %{_libdir}/libQZint.so.2.9
 %{_pixmapsdir}/zint.png
 %{_desktopdir}/zint-qt.desktop
 
