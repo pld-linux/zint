@@ -1,22 +1,25 @@
 Summary:	Barcode generator
 Summary(pl.UTF-8):	Generator kodów kreskowych
 Name:		zint
-Version:	2.9.1
+Version:	2.12.0
 Release:	1
-License:	GPL v3+
+License:	BSD (zint library), GPL v3+ (Qt backend, frontends)
 Group:		Applications/Graphics
-Source0:	http://downloads.sourceforge.net/zint/%{name}-%{version}-src.tar.gz
-# Source0-md5:	00511707a3b80023b97a6a79c9b145f0
+Source0:	https://downloads.sourceforge.net/zint/%{name}-%{version}-src.tar.gz
+# Source0-md5:	6cb6d70fcbca2fa0becec628fb1aa360
+URL:		https://sourceforge.net/projects/zint/
+# Qt6 also possible (with -DZINT_QT6=ON)
 BuildRequires:	Qt5Core-devel >= 5
 BuildRequires:	Qt5Gui-devel >= 5
 BuildRequires:	Qt5UiTools-devel >= 5
 BuildRequires:	Qt5Widgets-devel >= 5
 BuildRequires:	Qt5Xml-devel >= 5
-BuildRequires:	cmake >= 2.6.0
+BuildRequires:	cmake >= 3.5
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	qt5-build >= 5
 BuildRequires:	qt5-qmake >= 5
+BuildRequires:	rpmbuild(macros) >= 1.605
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -54,6 +57,7 @@ interfejs do biblioteki. Możliwości biblioteki:
 %package devel
 Summary:	Header files for zint library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki zint
+License:	BSD
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 
@@ -66,6 +70,7 @@ Pliki nagłówkowe biblioteki zint.
 %package qt
 Summary:	Zint Barcode Studio
 Summary(pl.UTF-8):	Zint Barcode Studio
+License:	GPL v3+
 Group:		X11/Applications/Graphics
 Requires:	%{name} = %{version}-%{release}
 
@@ -82,6 +87,7 @@ zostać włączone do dokumentów lub stron HTML.
 %package qt-devel
 Summary:	Header files for QZint library
 Summary(pl.UTF-8):	Pliki nagłówkowe biblioteki QZint
+License:	GPL v3+
 Group:		X11/Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 Requires:	%{name}-qt = %{version}-%{release}
@@ -97,6 +103,9 @@ Pliki nagłówkowe biblioteki QZint.
 %setup -q -n %{name}-%{version}-src
 
 find -type f -exec chmod 644 {} \;
+
+# build libQZint as shared
+%{__sed} -i -e '/^add_library/ s/ STATIC / SHARED /' backend_qt/CMakeLists.txt
 
 %build
 install -d build
@@ -115,7 +124,7 @@ install -d $RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir}}
 
 %{__mv} $RPM_BUILD_ROOT%{_datadir}/cmake/{modules,Modules}
 
-install zint.png $RPM_BUILD_ROOT%{_pixmapsdir}
+install zint-qt.png $RPM_BUILD_ROOT%{_pixmapsdir}
 install zint-qt.desktop $RPM_BUILD_ROOT%{_desktopdir}
 
 %clean
@@ -129,24 +138,27 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc README TODO
+%doc ChangeLog LICENSE README TODO
 %attr(755,root,root) %{_bindir}/zint
 %attr(755,root,root) %{_libdir}/libzint.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libzint.so.2.9
+%attr(755,root,root) %ghost %{_libdir}/libzint.so.2.12
+%{_mandir}/man1/zint.1*
 
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libzint.so
 %{_includedir}/zint.h
 %{_datadir}/cmake/Modules/FindZint.cmake
+%dir %{_datadir}/zint
+%{_datadir}/zint/zint*.cmake
 
 %files qt
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/zint-qt
 %attr(755,root,root) %{_libdir}/libQZint.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libQZint.so.2.9
-%{_pixmapsdir}/zint.png
+%attr(755,root,root) %ghost %{_libdir}/libQZint.so.2.12
 %{_desktopdir}/zint-qt.desktop
+%{_pixmapsdir}/zint-qt.png
 
 %files qt-devel
 %defattr(644,root,root,755)
