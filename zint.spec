@@ -1,20 +1,20 @@
 Summary:	Barcode generator
 Summary(pl.UTF-8):	Generator kodów kreskowych
 Name:		zint
-Version:	2.12.0
+Version:	2.16.0
 Release:	1
 License:	BSD (zint library), GPL v3+ (Qt backend, frontends)
 Group:		Applications/Graphics
 Source0:	https://downloads.sourceforge.net/zint/%{name}-%{version}-src.tar.gz
-# Source0-md5:	6cb6d70fcbca2fa0becec628fb1aa360
+# Source0-md5:	b7b48b11bfaa1a5eaad63837c6cbbce2
 URL:		https://sourceforge.net/projects/zint/
-# Qt6 also possible (with -DZINT_QT6=ON)
+# Qt6 also possible (with -DZINT_QT6=ON), but Qt5 still preferred
 BuildRequires:	Qt5Core-devel >= 5
 BuildRequires:	Qt5Gui-devel >= 5
 BuildRequires:	Qt5UiTools-devel >= 5
 BuildRequires:	Qt5Widgets-devel >= 5
 BuildRequires:	Qt5Xml-devel >= 5
-BuildRequires:	cmake >= 3.5
+BuildRequires:	cmake >= 3.10
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	qt5-build >= 5
@@ -122,10 +122,8 @@ install -d $RPM_BUILD_ROOT{%{_desktopdir},%{_pixmapsdir}}
 %{__make} -C build install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-%{__mv} $RPM_BUILD_ROOT%{_datadir}/cmake/{modules,Modules}
-
-install zint-qt.png $RPM_BUILD_ROOT%{_pixmapsdir}
-install zint-qt.desktop $RPM_BUILD_ROOT%{_desktopdir}
+cp -p zint-qt.png $RPM_BUILD_ROOT%{_pixmapsdir}
+cp -p zint-qt.desktop $RPM_BUILD_ROOT%{_desktopdir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -140,27 +138,25 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc ChangeLog LICENSE README TODO
 %attr(755,root,root) %{_bindir}/zint
-%attr(755,root,root) %{_libdir}/libzint.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libzint.so.2.12
+%{_libdir}/libzint.so.*.*.*
+%ghost %{_libdir}/libzint.so.2.16
 %{_mandir}/man1/zint.1*
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libzint.so
+%{_libdir}/libzint.so
 %{_includedir}/zint.h
-%{_datadir}/cmake/Modules/FindZint.cmake
-%dir %{_datadir}/zint
-%{_datadir}/zint/zint*.cmake
+%{_libdir}/cmake/zint
 
 %files qt
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/zint-qt
-%attr(755,root,root) %{_libdir}/libQZint.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libQZint.so.2.12
+%{_libdir}/libQZint.so.*.*.*
+%ghost %{_libdir}/libQZint.so.2.16
 %{_desktopdir}/zint-qt.desktop
 %{_pixmapsdir}/zint-qt.png
 
 %files qt-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libQZint.so
+%{_libdir}/libQZint.so
 %{_includedir}/qzint.h
