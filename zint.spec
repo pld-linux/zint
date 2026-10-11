@@ -11,9 +11,9 @@ URL:		https://sourceforge.net/projects/zint/
 # Qt6 also possible (with -DZINT_QT6=ON), but Qt5 still preferred
 BuildRequires:	Qt5Core-devel >= 5
 BuildRequires:	Qt5Gui-devel >= 5
+BuildRequires:	Qt5Svg-devel >= 5
 BuildRequires:	Qt5UiTools-devel >= 5
 BuildRequires:	Qt5Widgets-devel >= 5
-BuildRequires:	Qt5Xml-devel >= 5
 BuildRequires:	cmake >= 3.10
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
